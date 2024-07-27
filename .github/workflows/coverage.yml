@@ -78,3 +78,4 @@ jobs:
         with:
           source-dir: coverage/html
           branch-per-commit: ${{ github.event_name == 'pull_request'}}
+          pr-comment: hide_and_recreate
