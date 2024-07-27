@@ -1,7 +1,6 @@
 coverage:
   paths:
-    - 'coverage/lcov_backend.info'
-    - 'coverage/lcov_frontend.info'
+    - 'coverage/lcov_*.info'
 codeToTestRatio:
   code:
     - 'backend/src/*.rs'

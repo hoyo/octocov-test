@@ -1,6 +1,9 @@
 name: Report Code Coverage
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
 
 jobs:
@@ -54,4 +57,6 @@ jobs:
           path: ./coverage
           pattern: lcov_*
           merge-multiple: true
+      - run: ls -al
+      - run: ls -al ./coverage
       - uses: k1LoW/octocov-action@v1
