@@ -1,15 +1,15 @@
 coverage:
   paths:
     - 'coverage/**/lcov.info'
-codeToTestRatio:
-  code:
-    - 'backend/src/*.rs'
-    - 'frontend/app/*.ts'
-    - 'frontend/app/*.tsx'
-    - '!**/*.d.ts'
-    - '!**/*.test.tsx'
-  test:
-    - '**/*.test.tsx'
+# codeToTestRatio:
+#   code:
+#     - 'backend/src/*.rs'
+#     - 'frontend/app/*.ts'
+#     - 'frontend/app/*.tsx'
+#     - '!**/*.d.ts'
+#     - '!**/*.test.tsx'
+#   test:
+#     - '**/*.test.tsx'
 testExecutionTime:
   if: true
 diff:
