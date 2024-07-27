@@ -1,0 +1,57 @@
+name: Report Code Coverage
+
+on:
+  pull_request:
+
+jobs:
+  backend:
+    name: Measure Backend Coverage
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: taiki-e/install-action@cargo-llvm-cov
+      - name: Generate code coverage
+        run: cargo llvm-cov --all-features --workspace --lcov --output-path coverage/lcov.info
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lcov_backend.info
+          path: ./coverage/lcov.info
+
+  frontend:
+    name: Measure Frontend Coverage
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install dependencies
+        run: npm ci
+      - name: Generate code coverage
+        run: npm run test -- run --coverage
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lcov_frontend.info
+          path: ./coverage/lcov.info
+
+  octocov:
+    name: Collect Metrics
+    needs:
+      - backend
+      - frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: ./coverage
+          pattern: lcov_*
+          merge-multiple: true
+      - uses: k1LoW/octocov-action@v1
