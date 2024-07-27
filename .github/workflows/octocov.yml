@@ -6,6 +6,10 @@ on:
       - main
   pull_request:
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   backend:
     name: Measure Backend Coverage
@@ -21,7 +25,7 @@ jobs:
         run: cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info
       - uses: actions/upload-artifact@v4
         with:
-          name: lcov_backend.info
+          name: lcov_backend
           path: ./backend/lcov.info
 
   frontend:
@@ -41,7 +45,7 @@ jobs:
         run: npm run test -- run --coverage
       - uses: actions/upload-artifact@v4
         with:
-          name: lcov_frontend.info
+          name: lcov_frontend
           path: ./frontend/coverage/lcov.info
 
   octocov:
@@ -56,6 +60,4 @@ jobs:
         with:
           path: ./coverage
           pattern: lcov_*
-      - run: ls -al ./coverage
-      - run: ls -al ./coverage/*
       - uses: k1LoW/octocov-action@v1
