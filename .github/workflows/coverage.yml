@@ -27,7 +27,7 @@ jobs:
       - uses: taiki-e/install-action@cargo-llvm-cov
       - name: Generate code coverage
         run: |
-          mkdir target/llvm-cov
+          mkdir -p target/llvm-cov
           cargo llvm-cov --all-features --workspace --lcov --output-path target/llvm-cov/lcov.info
           cargo llvm-cov --all-features --workspace --html
       - uses: actions/upload-artifact@v4
@@ -50,10 +50,6 @@ jobs:
         run: npm ci
       - name: Generate code coverage
         run: npm run test -- run --coverage
-      - uses: rajyan/preview-pages@v1
-        with:
-          source-dir: ./frontend/coverage/lcov-report
-          target-dir: frontend
       - uses: actions/upload-artifact@v4
         with:
           name: lcov_frontend
@@ -74,7 +70,7 @@ jobs:
       - uses: k1LoW/octocov-action@v1
       - name: Move directories
         run: |
-          mkdir coverage/html
+          mkdir -p coverage/html
           mv coverage/lcov_backend/html coverage/html/backend
           mv coverage/lcov_frontend/lcov-report coverage/html/frontend
       - uses: rajyan/preview-pages@v1
