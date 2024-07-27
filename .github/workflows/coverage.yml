@@ -77,7 +77,4 @@ jobs:
       - uses: rajyan/preview-pages@v1
         with:
           source-dir: coverage/html
-      - uses: rajyan/preview-pages@v1
-        with:
-          source-dir: coverage/html
           branch-per-commit: ${{ github.event_name == 'pull_request'}}
