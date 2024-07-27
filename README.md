@@ -1,3 +1,3 @@
 # octocov-test
 
-![Coverage](https://raw.githubusercontent.com/hoyo/octocov-test-central/main/badges/hoyo/octocov-test/coverage.svg)
+[![Coverage](https://raw.githubusercontent.com/hoyo/octocov-test-central/main/badges/hoyo/octocov-test/coverage.svg)](https://hoyo.github.io/octocov-test/main/)
