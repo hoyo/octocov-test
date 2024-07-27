@@ -27,16 +27,13 @@ jobs:
       - uses: taiki-e/install-action@cargo-llvm-cov
       - name: Generate code coverage
         run: |
+          mkdir target/llvm-cov
+          cargo llvm-cov --all-features --workspace --lcov --output-path target/llvm-cov/lcov.info
           cargo llvm-cov --all-features --workspace --html
-          cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info
-      - uses: rajyan/preview-pages@v1
-        with:
-          source-dir: ./backend/target/llvm-cov
-          target-dir: backend
       - uses: actions/upload-artifact@v4
         with:
           name: lcov_backend
-          path: ./backend/lcov.info
+          path: ./backend/target/llvm-cov/
 
   frontend:
     name: Measure Frontend Coverage
@@ -60,7 +57,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: lcov_frontend
-          path: ./frontend/coverage/lcov.info
+          path: ./frontend/coverage/
 
   octocov:
     name: Collect Metrics
@@ -75,3 +72,11 @@ jobs:
           path: ./coverage
           pattern: lcov_*
       - uses: k1LoW/octocov-action@v1
+      - name: Move directories
+        run: |
+          mkdir coverage/html
+          mv coverage/lcov_backend/html coverage/html/backend
+          mv coverage/lcov_frontend/lcov-report coverage/html/frontend
+      - uses: rajyan/preview-pages@v1
+        with:
+          source-dir: coverage/html
