@@ -1,0 +1,79 @@
+name: Report Code Coverage
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: coverage-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Measure Backend Coverage
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: taiki-e/install-action@cargo-llvm-cov
+      - name: Generate code coverage
+        run: |
+          mkdir -p target/llvm-cov
+          cargo llvm-cov --all-features --workspace --lcov --output-path target/llvm-cov/lcov.info
+          cargo llvm-cov --all-features --workspace --html
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lcov_backend
+          path: ./backend/target/llvm-cov/
+
+  frontend:
+    name: Measure Frontend Coverage
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install dependencies
+        run: npm ci
+      - name: Generate code coverage
+        run: npm run test -- run --coverage
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lcov_frontend
+          path: ./frontend/coverage/
+
+  report:
+    name: Collect Metrics
+    needs:
+      - backend
+      - frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: ./coverage
+          pattern: lcov_*
+      - uses: k1LoW/octocov-action@v1
+      - name: Setup pages
+        run: |
+          mkdir -p coverage/html
+          mv coverage/lcov_backend/html coverage/html/backend
+          mv coverage/lcov_frontend/lcov-report coverage/html/frontend
+          echo "<ul><li><a href="backend">backend</li><li><a href="frontend">frontend</li></ul>" > coverage/html/index.html
+      - uses: rajyan/preview-pages@v1
+        with:
+          source-dir: coverage/html

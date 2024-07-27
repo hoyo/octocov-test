@@ -8,7 +8,7 @@ export default defineConfig({
     environment: "jsdom",
     coverage: {
       include: ["app"],
-      reporter: ["text", "json", "html", "lcov"],
+      reporter: ["text", "json", "lcov"],
     },
   },
 });
