@@ -56,7 +56,6 @@ jobs:
         with:
           path: ./coverage
           pattern: lcov_*
-          merge-multiple: true
-      - run: ls -al
       - run: ls -al ./coverage
+      - run: ls -al ./coverage/*
       - uses: k1LoW/octocov-action@v1
