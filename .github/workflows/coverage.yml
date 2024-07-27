@@ -55,7 +55,7 @@ jobs:
           name: lcov_frontend
           path: ./frontend/coverage/
 
-  octocov:
+  report:
     name: Collect Metrics
     needs:
       - backend
