@@ -10,17 +10,12 @@ async fn echo(req_body: String) -> impl Responder {
     HttpResponse::Ok().body(req_body)
 }
 
-async fn manual_hello() -> impl Responder {
-    HttpResponse::Ok().body("Hey there!")
-}
-
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             .service(hello)
             .service(echo)
-            .route("/hey", web::get().to(manual_hello))
     })
     .bind(("127.0.0.1", 8080))?
     .run()
@@ -44,7 +39,7 @@ mod tests {
     }
 
     #[actix_web::test]
-    async fn test_index_post() {
+    async fn test_echo_post() {
         let app = test::init_service(App::new().service(echo)).await;
         let req = test::TestRequest::post().uri("/echo").to_request();
         let resp = test::call_service(&app, req).await;
