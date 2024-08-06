@@ -77,9 +77,5 @@ jobs:
       - uses: rajyan/preview-pages@v1
         with:
           source-dir: coverage/html
-        if: ${{ github.event_name == 'pull_request' }}
-      - uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: coverage/html
-          target-folder: main
-        if: ${{ github.event_name == 'push' }}
+          branch-per-commit: ${{ github.event_name == 'pull_request'}}
+          pr-comment: hide_and_recreate
